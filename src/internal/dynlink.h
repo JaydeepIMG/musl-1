@@ -11,12 +11,25 @@ typedef Elf32_Phdr Phdr;
 typedef Elf32_Sym Sym;
 #define R_TYPE(x) ((x)&255)
 #define R_SYM(x) ((x)>>8)
+#define R_INFO ELF32_R_INFO
 #else
 typedef Elf64_Ehdr Ehdr;
 typedef Elf64_Phdr Phdr;
 typedef Elf64_Sym Sym;
 #define R_TYPE(x) ((x)&0x7fffffff)
 #define R_SYM(x) ((x)>>32)
+#define R_INFO ELF64_R_INFO
+#endif
+
+#ifdef __mips64
+#define _GNU_SOURCE
+#include <endian.h>
+#undef R_TYPE
+#undef R_SYM
+#undef R_INFO
+#define R_TYPE(x) (be64toh(x)&0x7fffffff) 
+#define R_SYM(x) (be32toh(be64toh(x)>>32))
+#define R_INFO(s,t) (htobe64((uint64_t)htobe32(s)<<32 | (uint64_t)t))
 #endif
 
 /* These enum constants provide unmatchable default values for
