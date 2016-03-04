@@ -12,7 +12,7 @@ __asm__(
 "" START ":\n"
 ".align 8 \n"
 "	bal 1f \n"
-"	 move $fp, $0 \n"
+"	move $fp, $0 \n"
 "" START "_data: \n"
 "	.gpdword " START "_data \n"
 "	.gpdword " START "_c \n"
