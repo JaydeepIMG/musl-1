@@ -29,9 +29,9 @@ static inline void *a_ll_p(volatile long *p)
 }
 
 #define a_sc_p a_sc_p
-static inline void *a_sc_p(volatile long *p, void *v)
+static inline long a_sc_p(volatile long *p, void *v)
 {
-	void *r;
+	long r;
 	__asm__ __volatile__ (
 		"scd %0, %1"
 		: "=r"(r), "=m"(*p) : "0"(v) : "memory");
