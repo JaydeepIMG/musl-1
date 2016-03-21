@@ -3,9 +3,13 @@ static inline int a_ll(volatile int *p)
 {
 	int v;
 	__asm__ __volatile__ (
+#if __mips_isa_rev < 6
 		".set push ; .set mips2\n\t"
+#endif
 		"ll %0, %1"
+#if __mips_isa_rev < 6
 		"\n\t.set pop"
+#endif
 		: "=r"(v) : "m"(*p));
 	return v;
 }
@@ -15,9 +19,13 @@ static inline int a_sc(volatile int *p, int v)
 {
 	int r;
 	__asm__ __volatile__ (
+#if __mips_isa_rev < 6
 		".set push ; .set mips2\n\t"
+#endif
 		"sc %0, %1"
+#if __mips_isa_rev < 6
 		"\n\t.set pop"
+#endif
 		: "=r"(r), "=m"(*p) : "0"(v) : "memory");
 	return r;
 }
