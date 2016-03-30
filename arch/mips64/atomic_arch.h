@@ -4,7 +4,7 @@ static inline int a_ll(volatile int *p)
 	int v;
 	__asm__ __volatile__ (
 		"ll %0, %1"
-		: "=r"(v) : "m"(*p));
+		: "=r"(v) : "ZC"(*p));
 	return v;
 }
 
@@ -14,7 +14,7 @@ static inline int a_sc(volatile int *p, int v)
 	int r;
 	__asm__ __volatile__ (
 		"sc %0, %1"
-		: "=r"(r), "=m"(*p) : "0"(v) : "memory");
+		: "=r"(r), "=ZC"(*p) : "0"(v) : "memory");
 	return r;
 }
 
@@ -24,7 +24,7 @@ static inline void *a_ll_p(volatile void *p)
 	void *v;
 	__asm__ __volatile__ (
 		"lld %0, %1"
-		: "=r"(v) : "m"(*(void *volatile *)p));
+		: "=r"(v) : "ZC"(*(void *volatile *)p));
 	return v;
 }
 
@@ -34,16 +34,14 @@ static inline int a_sc_p(volatile void *p, void *v)
 	long r;
 	__asm__ __volatile__ (
 		"scd %0, %1"
-		: "=r"(r), "=m"(*(void *volatile *)p) : "0"(v) : "memory");
+		: "=r"(r), "=ZC"(*(void *volatile *)p) : "0"(v) : "memory");
 	return r;
 }
 
 #define a_barrier a_barrier
 static inline void a_barrier()
 {
-	/* mips2 sync, but using too many directives causes
-	 * gcc not to inline it, so encode with .long instead. */
-	__asm__ __volatile__ (".long 0xf" : : : "memory");
+	__asm__ __volatile__ ("sync" : : : "memory");
 }
 
 #define a_pre_llsc a_barrier
