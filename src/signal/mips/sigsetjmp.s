@@ -8,15 +8,17 @@ sigsetjmp:
 __sigsetjmp:
 	lui $gp, %hi(_gp_disp)
 	addiu $gp, %lo(_gp_disp)
+	addu $gp, $gp, $25
 	beq $5, $0, 1f
-	 addu $gp, $gp, $25
+	 nop
 
 	sw $ra, 104($4)
 	sw $16, 104+4+16($4)
 
 	lw $25, %call16(setjmp)($gp)
+	move $16, $4
 	jalr $25
-	 move $16, $4
+	 nop
 
 	move $5,$2
 	move $4,$16

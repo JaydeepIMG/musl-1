@@ -35,5 +35,6 @@ setjmp:
 	swc1    $30, 96($4)
 	swc1    $31, 100($4)
 #endif
-	jr      $ra
 	li      $2, 0
+	jr      $ra
+	nop

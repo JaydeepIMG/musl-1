@@ -19,8 +19,9 @@ __syscall:
 	sw      $2 ,28($sp)
 	lw      $2, 28($sp)
 	syscall
-	beq     $7, $0, 1f
 	addu    $sp, $sp, 32
+	beq     $7, $0, 1f
+	nop
 	subu    $2, $0, $2
 1:	jr      $ra
 	nop

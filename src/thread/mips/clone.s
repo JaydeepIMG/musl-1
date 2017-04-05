@@ -4,7 +4,7 @@
 __clone:
 	# Save function pointer and argument pointer on new thread stack
 	and $5, $5, -8
-	subu $5, $5, 16
+	subu $5, $5, 32
 	sw $4, 0($5)
 	sw $7, 4($5)
 	# Shuffle (fn,sp,fl,arg,ptid,tls,ctid) to (fl,sp,ptid,tls,ctid)
@@ -19,8 +19,9 @@ __clone:
 	beq $7, $0, 1f
 	nop
 	addu $sp, $sp, 16
-	jr $ra
 	subu $2, $0, $2
+	jr $ra
+	nop
 1:	beq $2, $0, 1f
 	nop
 	addu $sp, $sp, 16

@@ -11,8 +11,9 @@ pipe:
 	beq $7, $0, 1f
 	nop
 	lw $25, %call16(__syscall_ret)($gp)
-	jr $25
 	subu $4, $0, $2
+	jr $25
+	nop
 1:	sw $2, 0($4)
 	sw $3, 4($4)
 	move $2, $0

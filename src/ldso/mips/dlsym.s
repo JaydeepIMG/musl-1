@@ -13,5 +13,6 @@ dlsym:
 	jalr $25
 	nop
 	lw $ra, 12($sp)
-	jr $ra
 	addiu $sp, $sp, 16
+	jr $ra
+	nop

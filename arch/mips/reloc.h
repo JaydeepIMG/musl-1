@@ -36,6 +36,26 @@
 #define CRTJMP(pc,sp) __asm__ __volatile__( \
 	"move $sp,%1 ; jr %0" : : "r"(pc), "r"(sp) : "memory" )
 
+#if __mips_isa_rev < 6
+#ifdef __mips_micromips
+#define GETFUNCSYM(fp, sym, got) __asm__ ( \
+	".hidden " #sym "\n" \
+	".set push \n" \
+	".set noreorder \n" \
+	"	.align 2 \n" \
+	"	bal32 1f \n" \
+	"	 nop32 \n" \
+	"	.gpword . \n" \
+	"	.gpword " #sym " \n" \
+	"1:	ins $ra, $0, 0, 1 \n" \
+	"	lw %0, ($ra) \n" \
+	"	subu %0, $ra, %0 \n" \
+	"	lw $ra, 4($ra) \n" \
+	"	addu %0, %0, $ra \n" \
+	"	ori %0, %0, 1 \n" \
+	".set pop \n" \
+	: "=r"(*(fp)) : : "memory", "ra" )
+#else
 #define GETFUNCSYM(fp, sym, got) __asm__ ( \
 	".hidden " #sym "\n" \
 	".set push \n" \
@@ -50,3 +70,38 @@
 	"	addu %0, %0, $ra \n" \
 	".set pop \n" \
 	: "=r"(*(fp)) : : "memory", "ra" )
+#endif
+#else
+#ifdef __mips_micromips
+#define GETFUNCSYM(fp, sym, got) __asm__ ( \
+	".hidden " #sym "\n" \
+	".set push \n" \
+	".set noreorder \n" \
+	"	.align 2 \n" \
+	"	balc32 1f \n" \
+	"	.gpword . \n" \
+	"	.gpword " #sym " \n" \
+	"1:	ins $ra, $0, 0, 1 \n" \
+	"	lw %0, ($ra) \n" \
+	"	subu %0, $ra, %0 \n" \
+	"	lw $ra, 4($ra) \n" \
+	"	addu %0, %0, $ra \n" \
+	"	ori %0, %0, 1 \n" \
+	".set pop \n" \
+	: "=r"(*(fp)) : : "memory", "ra" )
+#else
+#define GETFUNCSYM(fp, sym, got) __asm__ ( \
+	".hidden " #sym "\n" \
+	".set push \n" \
+	".set noreorder \n" \
+	"	balc 1f \n" \
+	"	.gpword . \n" \
+	"	.gpword " #sym " \n" \
+	"1:	lw %0, ($ra) \n" \
+	"	subu %0, $ra, %0 \n" \
+	"	lw $ra, 4($ra) \n" \
+	"	addu %0, %0, $ra \n" \
+	".set pop \n" \
+	: "=r"(*(fp)) : : "memory", "ra" )
+#endif
+#endif

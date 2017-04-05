@@ -10,8 +10,9 @@ feclearexcept:
 	or      $5, $5, $4
 	xor     $5, $5, $4
 	ctc1    $5, $31
-	jr      $ra
 	li      $2, 0
+	jr      $ra
+	nop
 
 .global feraiseexcept
 .type  feraiseexcept,@function
@@ -20,23 +21,26 @@ feraiseexcept:
 	cfc1    $5, $31
 	or      $5, $5, $4
 	ctc1    $5, $31
-	jr      $ra
 	li      $2, 0
+	jr      $ra
+	nop
 
 .global fetestexcept
 .type  fetestexcept,@function
 fetestexcept:
 	and     $4, $4, 0x7c
 	cfc1    $2, $31
-	jr      $ra
 	and     $2, $2, $4
+	jr      $ra
+	nop
 
 .global fegetround
 .type  fegetround,@function
 fegetround:
 	cfc1    $2, $31
-	jr      $ra
 	andi    $2, $2, 3
+	jr      $ra
+	nop
 
 .global __fesetround
 .type __fesetround,@function
@@ -46,16 +50,18 @@ __fesetround:
 	and     $5, $5, $6
 	or      $5, $5, $4
 	ctc1    $5, $31
-	jr      $ra
 	li      $2, 0
+	jr      $ra
+	nop
 
 .global fegetenv
 .type  fegetenv,@function
 fegetenv:
 	cfc1    $5, $31
 	sw      $5, 0($4)
-	jr      $ra
 	li      $2, 0
+	jr      $ra
+	nop
 
 .global fesetenv
 .type  fesetenv,@function
@@ -65,7 +71,8 @@ fesetenv:
 	 nop
 	lw      $5, 0($4)
 1:	ctc1    $5, $31
-	jr      $ra
 	li      $2, 0
+	jr      $ra
+	nop
 
 #endif
