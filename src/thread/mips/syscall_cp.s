@@ -1,5 +1,5 @@
 .set    noreorder
-
+.set    nomicromips
 .global __cp_begin
 .hidden __cp_begin
 .type   __cp_begin,@function
