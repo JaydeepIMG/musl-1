@@ -41,11 +41,13 @@ __cp_end:
 
 __cp_cancel:
 	move    $2, $ra
+	.align	2
 	bal     1f
 	addu    $sp, $sp, 32
 	.gpword .
 	.gpword __cancel
-1:	lw      $3, ($ra)
+1:	ins $ra, $0, 0, 1
+	lw      $3, ($ra)
 	subu    $3, $ra, $3
 	lw      $25, 4($ra)
 	addu    $25, $25, $3

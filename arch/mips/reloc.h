@@ -36,15 +36,23 @@
 #define CRTJMP(pc,sp) __asm__ __volatile__( \
 	"move $sp,%1 ; jr %0" : : "r"(pc), "r"(sp) : "memory" )
 
+/*
+ * When compiled for microMIPS, .align makes sure that .gpword
+ * is placed at word boundary. $ra must point to first .gpword.
+ * ISA bit of $ra must be cleared for microMIPS before using it
+ * as a base address. For MIPS, ISA bit is always zero.
+*/
 #define GETFUNCSYM(fp, sym, got) __asm__ ( \
 	".hidden " #sym "\n" \
 	".set push \n" \
 	".set noreorder \n" \
+	"	.align 2 \n" \
 	"	bal 1f \n" \
 	"	 nop \n" \
 	"	.gpword . \n" \
 	"	.gpword " #sym " \n" \
-	"1:	lw %0, ($ra) \n" \
+	"1:	ins $ra, $0, 0, 1 \n" \
+	"	lw %0, ($ra) \n" \
 	"	subu %0, $ra, %0 \n" \
 	"	lw $ra, 4($ra) \n" \
 	"	addu %0, %0, $ra \n" \
